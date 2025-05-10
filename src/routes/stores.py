@@ -5,10 +5,7 @@ from src.core import models
 from src.core.database import GetDBDep
 from src.schemas.store import Store, CreateStore, DbStore, PatchStore
 
-db_stores = []
-
 router = APIRouter(prefix="/admin/stores", tags=["Stores"])
-
 
 @router.post("", response_model=Store)
 def create_store(store: CreateStore, db: GetDBDep):
@@ -41,7 +38,7 @@ def update_store(store_id: int, store: CreateStore, db: GetDBDep):
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Store not found")
 
     db_store.name = store.name
-    db_store.owner = store.owner
+    db.store.owner_id = store.owner_id
 
     db.commit()
     return db_store
@@ -54,8 +51,8 @@ def patch_store(store_id: int, store: PatchStore, db: GetDBDep):
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Store not found")
     if store.name:
         db_store.name = store.name
-    if store.owner:
-        db_store.owner = store.owner
+    if store.owner_id:
+        db_store.owner_id = store.owner_id
 
     db.commit()
     return db_store
@@ -68,3 +65,4 @@ def delete_store(store_id: int, db: GetDBDep):
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Store not found")
     db.delete(db_store)
     db.commit()
+    return {"message": "Store deleted"}
