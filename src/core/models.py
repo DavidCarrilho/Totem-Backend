@@ -21,6 +21,7 @@ class Store(Base, TimestampMixin):
     owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     owner: Mapped["User"] = relationship()
 
+
 class User(Base, TimestampMixin):
     __tablename__ = "users"
 
