@@ -13,7 +13,9 @@ ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
 
 def get_password_hash(password):
     return pwd_context.hash(password)
@@ -27,12 +29,11 @@ def authenticate_user(email: str, password: str, db: Session) -> models.User | N
     if not user:
         return None
 
-    verify_password(password, user.hashed_password)
-
     if not verify_password(password, user.hashed_password):
         return None
 
     return user
+
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
@@ -44,11 +45,13 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def verify_token(token):
+def verify_token(token: str):
     try:
+        print("TOKEN", token)
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-
+        print("PAYLOAD", payload)
+        email = payload.get("sub")
         return email
-    except InvalidTokenError:
+    except InvalidTokenError as e:
+        print("ERROR", e)
         return None

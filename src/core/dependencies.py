@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException
 
 from src.core import models
 from src.core.database import GetDBDep
-from src.service.auth import oauth2_scheme, verify_token
+from src.services.auth import oauth2_scheme, verify_token
 
 
 def get_current_user(

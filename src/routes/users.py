@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
+from fastapi.params import Depends
 
 from src.core import models
 from src.core.database import GetDBDep
 from src.core.dependencies import get_current_user
 from src.schemas.user import UserCreate, User
-from src.service.auth import get_password_hash
+from src.services.auth import get_password_hash
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -23,8 +24,9 @@ def create_user(user: UserCreate, db: GetDBDep):
     db.commit()
     return user_internal
 
+
 @router.get("/me", response_model=User)
 def get_me(
-        current_user: models.User = Depends(get_current_user),
+    current_user: models.User = Depends(get_current_user),
 ):
     return current_user
