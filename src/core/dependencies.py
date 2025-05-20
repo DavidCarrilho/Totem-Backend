@@ -4,15 +4,13 @@ from fastapi import Depends, HTTPException
 
 from src.core import models
 from src.core.database import GetDBDep
-from src.services.auth import oauth2_scheme, verify_token
+from src.services.auth import oauth2_scheme, verify_access_token
 
 
 def get_current_user(
         db: GetDBDep, token: Annotated[str, Depends(oauth2_scheme)]
 ):
-    email = verify_token(token)
-
-    print("EMAIL", email)
+    email = verify_access_token(token)
 
     if not email:
         raise HTTPException(status_code=401, detail="Invalid token")

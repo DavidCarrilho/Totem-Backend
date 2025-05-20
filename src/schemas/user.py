@@ -12,6 +12,7 @@ class UserCreate(BaseModel):
     name: str = Field(..., min_length=3, max_length=32)
     password: str = Field(..., min_length=8, max_length=16)
 
+
 class ChangePasswordData(BaseModel):
     old_password: str
-    new_password: str
+    new_password: str = Field(..., min_length=8, max_length=16)
